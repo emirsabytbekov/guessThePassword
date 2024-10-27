@@ -10,12 +10,14 @@ public class Main {
         ArrayList<Integer> password = new ArrayList<>(arrayListSize);
         ArrayList<Integer> guess = new ArrayList<>(arrayListSize);
 
+        int p = 0;
+        ArrayList<Integer> isFoundOrNot = new ArrayList<>(arrayListSize);
 
-        int numberOfGreenNumbers = 0;
-        ArrayList<Integer> positionsOfGreenNumbers = new ArrayList<>();
-
+//        for (int i = 0; i < arrayListSize; i++) {
+//            password.add(rand.nextInt(10));
+//        }
         for (int i = 0; i < arrayListSize; i++) {
-            password.add(rand.nextInt(10));
+            password.add(sc.nextInt());
         }
 
         for (int i = 0; i < arrayListSize; i++) {
@@ -23,23 +25,44 @@ public class Main {
             guess.add(element);
         }
 
-        for (int i = 0; i < arrayListSize; i++) {
-            if (guess.get(i) == password.get(i)) {
-                System.out.print("\n" + guess.get(i) + "\uD83D\uDFE2");
-                numberOfGreenNumbers++;
-                positionsOfGreenNumbers.add(i);
-            }
-            else if (guess.get(i) != password.get(i)) {
-                for (int j = 0; j < arrayListSize; j++) {
-                    if (guess.get(i) == password.get(j)) {
-                        System.out.print("\n" + guess.get(i) + "\uD83D\uDFE1");
-                        break;
-                    }
+        for (int numberOfAttempts = 5; numberOfAttempts > 0; numberOfAttempts--)
+        {
+            if (numberOfAttempts < 5) {
+                for (int i = 0; i < arrayListSize; i++) {
+                    int element = sc.nextInt();
+                    guess.set(i, element);
                 }
             }
-            else System.out.print("\n" + guess.get(i) + "\uD83D\uDD34");
+
+            for (int i = 0; i < arrayListSize; i++) {
+                for (; p < arrayListSize; p++) {
+                    if (guess.get(p) == password.get(p)) isFoundOrNot.add(1);
+                    else isFoundOrNot.add(0);
+                }
+
+                if (guess.get(i) == password.get(i)) {
+                    System.out.print("\n" + guess.get(i) + "\uD83D\uDFE2");
+                }
+                else
+                {
+                    for (int j = 0; j < arrayListSize; j++) {
+                        if (guess.get(i) == password.get(j) && isFoundOrNot.get(j) == 0) {
+                            System.out.print("\n" + guess.get(i) + "\uD83D\uDFE1");
+                            break;
+                        }
+                        else {
+                            System.out.print("\n" + guess.get(i) + "\uD83D\uDD34");
+                            break;
+                        }
+                    }
+                }
+
+            }
         }
 
+
+
+        System.out.println(password);
 
     }
 }
