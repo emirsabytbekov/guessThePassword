@@ -4,15 +4,23 @@ import java.util.Scanner;
 import java.util.ArrayList;
 public class Main {
     public static int numberOfGreenNumbers;
+    public static String greenDot = "\uD83D\uDFE2";
+    public static String yellowDot = "\uD83D\uDFE1";
+    public static String redDot = "\uD83D\uDD34";
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random rand = new Random();
 
         printGreeting(sc);
 
-//        String ifUserWantsToSeeRules = sc.nextLine();
-//        clearScreen();
-//        if (Objects.equals(ifUserWantsToSeeRules, "rules")) showRules();
+        boolean isShowRules  = Objects.equals(sc.nextLine(), "rules");
+        clearScreen();
+        if (isShowRules) {
+            showRules(sc);
+            clearScreen();
+        }
+
+
 
         System.out.print("Enter how many numbers should a password contain: ");
         int passwordSize = sc.nextInt();
@@ -26,7 +34,7 @@ public class Main {
 
         createPassword(passwordSize, password, rand);
 
-        System.out.println("Please, enter your guess");
+        System.out.println("Please, enter your guess:");
         getFirstGuess(passwordSize, guessArrayList, sc);
 
         findGreenNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces);
@@ -51,6 +59,10 @@ public class Main {
 
             displayColoursOfNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces, yellowNumbersPlaces);
 
+            if (numberOfGreenNumbers != passwordSize) {
+                System.out.print("\nPlease, enter your next guess:");
+            }
+
             System.out.println(" ");
 
             if (numberOfGreenNumbers == passwordSize)
@@ -70,21 +82,40 @@ public class Main {
 
     public static void printGreeting(Scanner sc) {
         System.out.println("Welcome to the game Guess The Password!");
-       // System.out.println("Enter «rules», if you want to see the rules");
-        System.out.println("You will have FIVE attempts to guess the password.");
-        System.out.println("Press the «Enter» button to start the game");
+        System.out.println("Enter «rules», if you want to see the rules.");
+        System.out.println("Or just press the «Enter» button to start the game.");
     }
 
     public static void clearScreen () {
-        System.out.print("\n\n\n");
+        System.out.print("\n\n\n\n\n\n\n");
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
-    public static void showRules () {
+    public static void showRules (Scanner sc) {
         System.out.println("RULES:");
-        System.out.println("\n\nHere are the rules");
-        clearScreen();
+        System.out.println("\nYou should enter a number that denotes how many digits will be in the password.");
+        System.out.println("After that you should enter your guess and digits in your guess should be divided by the space.");
+        System.out.println("As soon as you press enter you will see colors of digits in your guess:");
+
+        System.out.println("\nIf a number is RED " + redDot);
+        System.out.println("It means that password does not contain that digit at all.");
+        System.out.println("If a number is YELLOW " + yellowDot);
+        System.out.println("It means that password contains that digit but it is placed not in the right spot.");
+        System.out.println("If a number is GREEN " + greenDot);
+        System.out.println("It means that password does contain that digit and it placed in the right spot.");
+
+        System.out.println("\nYou have FIVE attempts to guess the password.");
+        System.out.println("If you guess the password in five attempts, you win.");
+        System.out.println("Otherwise you lose.");
+
+        System.out.println("\nNOTE:");
+        System.out.println("1" + redDot + " 4" + yellowDot + " 4" + yellowDot + " 8" + redDot + " DOES NOT mean that the password has two '4', it contains AT LEAST one '4'");
+        System.out.println("2" + redDot + " 0" + greenDot + " 0" + redDot + " 7" + redDot + " means that the password contains exactly one '0'");
+        System.out.println("1" + redDot + " 2" + greenDot + " 3" + redDot + " 2" + yellowDot + " means that the password contains AT LEAST two '2'");
+
+        System.out.println("\nPress the «Enter» button (you will probably press it twice) to start the game.");
+        sc.nextLine();
     }
 
     public static void createPassword (int arrayListSize, ArrayList<Integer> password, Random rand) {
@@ -163,7 +194,7 @@ public class Main {
 
     public static void showFoundGreenNumbers(int i, ArrayList<Integer> guess, ArrayList<Integer> password) {
         if (Objects.equals(guess.get(i), password.get(i))) {
-            System.out.print(guess.get(i) + "\uD83D\uDFE2 "); //green
+            System.out.print(guess.get(i) + greenDot + " ");
             numberOfGreenNumbers++;
         }
     }
@@ -171,7 +202,7 @@ public class Main {
     public static void showFoundYellowNumbers (int arrayListSize, int i, ArrayList<Integer> guess, ArrayList<Integer> password, ArrayList<Integer> isGreenOrNot) {
         for (int j = 0; j < arrayListSize; j++) {
             if (Objects.equals(guess.get(i), password.get(j)) && isGreenOrNot.get(j) == 0) {
-                System.out.print(guess.get(i) + "\uD83D\uDFE1 "); //yellow
+                System.out.print(guess.get(i) + yellowDot + " ");
                 break;
             }
         }
@@ -180,7 +211,7 @@ public class Main {
     public static void showFoundRedNumbers (int arrayListSize, int i, ArrayList<Integer> isYellowOrNot, ArrayList<Integer> guess, ArrayList<Integer> password, ArrayList<Integer> isGreenOrNot) {
         for (int j = 0; j < arrayListSize; j++) {
             if (isYellowOrNot.get(i) == 0 && (!Objects.equals(guess.get(i), password.get(j)) || isGreenOrNot.get(j) == 1)) {
-                System.out.print(guess.get(i) + "\uD83D\uDD34 "); //red
+                System.out.print(guess.get(i) + redDot + " ");
                 break;
             }
         }
