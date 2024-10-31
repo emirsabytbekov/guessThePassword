@@ -8,45 +8,52 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Random rand = new Random();
 
-        int arrayListSize = sc.nextInt();
-        ArrayList<Integer> password = new ArrayList<>(arrayListSize);
-        ArrayList<Integer> guess = new ArrayList<>(arrayListSize);
+        printGreeting(sc);
 
-        ArrayList<Integer> isGreenOrNot = new ArrayList<>(arrayListSize);
-        ArrayList<Integer> isYellowOrNot = new ArrayList<>(arrayListSize);
+//        String ifUserWantsToSeeRules = sc.nextLine();
+//        clearScreen();
+//        if (Objects.equals(ifUserWantsToSeeRules, "rules")) showRules();
+
+        System.out.print("Enter how many numbers should a password contain: ");
+        int passwordSize = sc.nextInt();
+
+        ArrayList<Integer> password = new ArrayList<>(passwordSize);
+        ArrayList<Integer> guessArrayList = new ArrayList<>(passwordSize);
+
+        ArrayList<Integer> greenNumbersPlaces = new ArrayList<>(passwordSize);
+        ArrayList<Integer> yellowNumbersPlaces = new ArrayList<>(passwordSize);
 
 
-        createPassword(arrayListSize, password, rand);
+        createPassword(passwordSize, password, rand);
 
-//        setPassword(arrayListSize, password, sc);
+        System.out.println("Please, enter your guess");
+        getFirstGuess(passwordSize, guessArrayList, sc);
 
-        getFirstGuess(arrayListSize, guess, sc);
+        findGreenNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces);
 
-        findGreenNumbers(arrayListSize, guess, password, isGreenOrNot);
-
-        makeArrayListOfZeroes(arrayListSize, isYellowOrNot);
+        makeArrayListOfZeroes(passwordSize, yellowNumbersPlaces);
 
 
         int numberOfAttemptsRemaining = 5; //the most optimal number of attempts
         for (; numberOfAttemptsRemaining > 0; numberOfAttemptsRemaining--)
         {
             if (numberOfAttemptsRemaining < 5) {
-                getNewGuess(arrayListSize, sc, guess);
-                getNewGreenNumbers(arrayListSize, guess, password, isGreenOrNot);
+                getNewGuess(passwordSize, sc, guessArrayList);
+                getNewGreenNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces);
             }
 
-            getYellowNumbers(arrayListSize, isYellowOrNot);
+            getYellowNumbers(passwordSize, yellowNumbersPlaces);
 
-            getNewYellowNumbers(arrayListSize, guess, password, isGreenOrNot, isYellowOrNot);
+            getNewYellowNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces, yellowNumbersPlaces);
 
 
             numberOfGreenNumbers = 0;
 
-            displayColoursOfNumbers(arrayListSize, guess, password, isGreenOrNot, isYellowOrNot);
+            displayColoursOfNumbers(passwordSize, guessArrayList, password, greenNumbersPlaces, yellowNumbersPlaces);
 
             System.out.println(" ");
 
-            if (numberOfGreenNumbers == arrayListSize)
+            if (numberOfGreenNumbers == passwordSize)
             {
                 System.out.println(printWinMessage());
                 break;
@@ -54,12 +61,31 @@ public class Main {
         }
 
         if (numberOfAttemptsRemaining == 0) {
-            printLoseMessage(arrayListSize, password);
+            printLoseMessage(passwordSize, password);
         }
     }
 
 
 
+
+    public static void printGreeting(Scanner sc) {
+        System.out.println("Welcome to the game Guess The Password!");
+       // System.out.println("Enter «rules», if you want to see the rules");
+        System.out.println("You will have FIVE attempts to guess the password.");
+        System.out.println("Press the «Enter» button to start the game");
+    }
+
+    public static void clearScreen () {
+        System.out.print("\n\n\n");
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public static void showRules () {
+        System.out.println("RULES:");
+        System.out.println("\n\nHere are the rules");
+        clearScreen();
+    }
 
     public static void createPassword (int arrayListSize, ArrayList<Integer> password, Random rand) {
         for (int i = 0; i < arrayListSize; i++) {
@@ -172,8 +198,12 @@ public class Main {
 
     public static void printPassword(int arrayListSize, ArrayList<Integer> password) {
         for (int i = 0; i < arrayListSize; i++) {
-            if (i < arrayListSize - 1) System.out.print(password.get(i) + " ");
-            else System.out.print(password.get(i));
+            if (i < arrayListSize - 1) {
+                System.out.print(password.get(i) + " ");
+            }
+            else {
+                System.out.print(password.get(i));
+            }
         }
     }
 
